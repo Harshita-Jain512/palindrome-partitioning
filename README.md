@@ -1,3 +1,173 @@
+# sudoko solver
+Initial Board (partial view)
+Row\Col 0 1 2 3 4 5 6 7 8
+
+0       5 3 . . 7 . . . .
+1       6 . . 1 9 5 . . .
+2       . 9 8 . . . . 6 .
+
+
+. → empty cell
+
+Initial Call
+solve(board)
+
+Level 1 → First empty cell found
+i = 0, j = 2
+board[0][2] == '.'
+
+Try digits for board[0][2]
+for (c = '1' to '9')
+
+c = '1'
+isValid(board, 0, 2, '1')
+
+
+Checks:
+
+Row 0 → no '1'
+
+Col 2 → no '1'
+
+3×3 box → no '1'
+
+isValid → true
+
+board[0][2] = '1'
+
+
+Board now:
+
+5 3 1 . 7 . . . .
+
+solve(board)   ← recursive call
+
+Level 2 → Next empty cell
+i = 0, j = 3
+board[0][3] == '.'
+
+Try digits for board[0][3]
+c = '1'
+Row already has '1' → invalid
+(skip)
+
+c = '2'
+isValid → true
+
+board[0][3] = '2'
+
+
+Board:
+
+5 3 1 2 7 . . . .
+
+solve(board)
+
+Level 3 → Next empty cell
+i = 0, j = 5
+board[0][5] == '.'
+
+Try digits for board[0][5]
+c = '1' ❌ (row conflict)
+c = '2' ❌ (row conflict)
+c = '3' ❌
+c = '4' ✅
+board[0][5] = '4'
+
+
+Board:
+
+5 3 1 2 7 4 . . .
+
+solve(board)
+
+Level 4 → Next empty cell
+i = 0, j = 6
+board[0][6] == '.'
+
+Try digits for board[0][6]
+c = '1' ❌
+c = '2' ❌
+c = '3' ❌
+c = '4' ❌
+c = '5' ❌
+c = '6' ❌
+c = '7' ❌
+c = '8' ❌
+c = '9' ❌
+No valid digit found
+
+❌ DEAD END REACHED
+return false
+
+🔙 Backtrack to Level 3 (cell 0,5)
+
+We come back here:
+
+if (solve(board) == true)
+    return true;
+else
+    board[i][j] = '.';
+
+board[0][5] = '.'
+
+
+Board restored:
+
+5 3 1 2 7 . . . .
+
+Level 3 → Try next digit
+c = '5' ❌
+c = '6' ❌
+c = '7' ❌
+c = '8' ✅ // iski iteration 4 ke baad puri nhi hui so... now starting with 5
+board[0][5] = '8'
+
+solve(board)
+
+Level 4 → board[0][6] again
+Try digits
+c = '4' ✅
+board[0][6] = '4'
+
+solve(board)
+
+Level 5 → Next empty cell
+i = 0, j = 7
+
+
+Try digits…
+
+Eventually:
+
+board[0][7] = '9'
+
+solve(board)
+
+Level 6 → Next empty cell
+i = 0, j = 8
+
+board[0][8] = '6'
+
+✔ Row 0 COMPLETED
+5 3 1 2 7 8 4 9 6
+
+Move to Row 1
+i = 1, j = 1
+board[1][1] == '.'
+
+
+Repeat SAME PROCESS:
+
+Try digits
+
+Place
+
+Recurse
+
+Fail → Backtrack
+
+Succeed → Continue
 
 # Palindrome Partitioning (LeetCode 131)
 
